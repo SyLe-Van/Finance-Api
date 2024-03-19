@@ -4,19 +4,16 @@ const dotenv = require("dotenv").config();
 const PORT = process.env.PORT || 4000;
 const financeRoute = require("./routes/financeRoute");
 const expensesRoute = require("./routes/expensesRoute");
-const incomeRoute = require("./routes/incomeRoute");
+const incomeRoute = require("./routes/incomeRoute")
 const fs = require("fs");
 //---------------------------------------------------------- server ----------------------------------------------------------
-// ip = "172.26.6.111";
-app.listen(PORT, () =>
-  console.log(`Server running on port http://localhost:${PORT}`)
-);
+ip = '134.209.108.2'
+app.listen(PORT, ip, () => console.log(`Server running on port http://${ip}:${PORT}`));
 
 //---------------------------------------------------------- MongoDB connect -----------------------------------------------------
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
-mongoose
-  .connect(process.env.MONGODB_URL, {
+mongoose.connect(process.env.MONGODB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -27,3 +24,7 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use("/api/", financeRoute);
 app.use("/api/", expensesRoute);
 app.use("/api/", incomeRoute);
+
+
+
+

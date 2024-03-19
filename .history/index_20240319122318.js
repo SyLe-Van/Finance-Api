@@ -7,9 +7,9 @@ const expensesRoute = require("./routes/expensesRoute");
 const incomeRoute = require("./routes/incomeRoute");
 const fs = require("fs");
 //---------------------------------------------------------- server ----------------------------------------------------------
-// ip = "172.26.6.111";
-app.listen(PORT, () =>
-  console.log(`Server running on port http://localhost:${PORT}`)
+ip = "172.26.6.111";
+app.listen(PORT, ip, () =>
+  console.log(`Server running on port http://${ip}:${PORT}`)
 );
 
 //---------------------------------------------------------- MongoDB connect -----------------------------------------------------

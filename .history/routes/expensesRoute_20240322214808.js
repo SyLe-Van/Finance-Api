@@ -7,8 +7,8 @@ router.delete(
   "/deleteExpenses/:userId/:expensesId",
   expensesController.deleteExpenses
 );
-router.get("/getExpense/:userId/:expensesId", expensesController.getOneExpense);
-router.get("/getExpenses/:userId", expensesController.getAllExpense);
+router.get("/getExpense/:userId/:expensesId", expensesController.getExpense);
+router.get("/getExpenses/:userId", expensesController.getExpenses);
 router.get(
   "/getExpensesByCurrentMonth/:userId",
   expensesController.getExpensesByCurrentMonth
@@ -17,7 +17,6 @@ router.get(
   "/getExpensesByMonthAndYear/:userId/:month/:year",
   expensesController.getExpensesByMonthAndYear
 );
-
 router.get(
   "/getTotalExpensesMonthByYear/:userId/:year",
   expensesController.getTotalExpensesMonthByYear

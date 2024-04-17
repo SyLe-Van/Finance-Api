@@ -243,36 +243,31 @@ module.exports = {
     try {
       const { userId, expensesId } = req.params;
       const { categoriesExpenses, date, value, note } = req.body;
-
       validIdMongo(userId);
       validIdMongo(expensesId);
-
       const user = await financeModel.findById(userId);
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-
       const expensesIndex = user.expenses.findIndex(
         (expenses) => expenses._id.toString() === expensesId
       );
       if (expensesIndex === -1) {
-        return res.status(404).json({ error: "Expenses not found" });
+        return res.status(404).json({ error: "expenses not found" });
       }
-
+      console.log(user.expenses[expensesIndex]);
       // Cập nhật thông tin chi phí trong mảng expenses của người dùng
       user.expenses[expensesIndex].categoriesExpenses = categoriesExpenses;
       user.expenses[expensesIndex].date = date;
       user.expenses[expensesIndex].value = value;
       user.expenses[expensesIndex].note = note;
       await user.save();
-
       // Cập nhật thông tin chi phí trong cơ sở dữ liệu
       const updatedExpenses = await ExpensesModel.findByIdAndUpdate(
         expensesId,
         { categoriesExpenses, date, value, note },
         { new: true }
       );
-
       res.status(200).json(updatedExpenses);
     } catch (error) {
       console.error(error);

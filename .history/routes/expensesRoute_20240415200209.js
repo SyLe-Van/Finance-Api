@@ -22,7 +22,10 @@ router.get(
   "/getTotalExpensesMonthByYear/:userId/:year",
   expensesController.getTotalExpensesMonthByYear
 );
-router.put("/updateExpenses", expensesController.updateExpenses);
+router.put(
+  "/updateExpenses/:userId/:expensesId",
+  expensesController.updateExpenses
+);
 router.delete(
   "/deleteAllExpenses/:userId",
   expensesController.deleteAllExpenses

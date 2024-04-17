@@ -67,33 +67,34 @@ module.exports = {
       const { userId, incomeId } = req.params;
       validIdMongo(userId);
       validIdMongo(incomeId);
-
-      const user = await FinanceUserModel.findById(userId).populate("incomes");
-
+  
+      const user = await FinanceUserModel.findById(userId).populate('incomes');
+  
       if (!user) {
-        return res.status(404).json({ error: "User not found" });
+        return res.status(404).json({ error: 'User not found' });
       }
-
+  
       const income = user.incomes.find(
         (income) => income._id.toString() === incomeId
       );
-
+  
       if (!income) {
-        return res.status(404).json({ error: "Income not found" });
+        return res.status(404).json({ error: 'Income not found' });
       }
-
+  
       // Format the date in the income
       const formattedIncome = {
         ...income.toObject(),
-        date: income.date.toISOString().split("T")[0],
+        date: income.date.toISOString().split('T')[0],
       };
-
+  
       res.status(200).json(formattedIncome);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Failed to get income" });
+      res.status(500).json({ error: 'Failed to get income' });
     }
   },
+  
 
   getIncomes: async (req, res) => {
     try {
@@ -122,34 +123,35 @@ module.exports = {
     try {
       const { userId } = req.params;
       validIdMongo(userId);
-
+  
       const user = await FinanceUserModel.findById(userId).populate("incomes");
-
+  
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-
+  
       // Get the current month (1-indexed)
       const currentMonth = new Date().getMonth() + 1;
-
+  
       // Filter incomes by the current month
       const filteredIncomes = user.incomes.filter((income) => {
         const incomeMonth = income.date.getMonth() + 1; // Month is zero-based
         return incomeMonth === currentMonth;
       });
-
+  
       // Format the date in each income
       const formattedIncomes = filteredIncomes.map((income) => ({
         ...income.toObject(),
         date: income.date.toISOString().split("T")[0],
       }));
-
+  
       res.status(200).json(formattedIncomes);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to get incomes" });
     }
   },
+  
 
   getIncomeByMonthAndYear: async (req, res) => {
     try {
@@ -197,51 +199,51 @@ module.exports = {
     try {
       const { userId, year } = req.params;
       validIdMongo(userId);
-
+  
       const user = await FinanceUserModel.findById(userId).populate("incomes");
-
+  
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-
+  
       // Filter incomes by the specified year
       const filteredIncomes = user.incomes.filter((income) => {
         const incomeYear = income.date.getFullYear();
         return incomeYear.toString() === year;
       });
-
+  
       // Initialize the monthlyTotalIncomes array with default values of 0
       const monthlyTotalIncomes = Array.from({ length: 12 }, () => 0);
-
+  
       // Update the monthlyTotalIncomes array based on actual incomes
       filteredIncomes.forEach((income) => {
         const incomeMonth = income.date.getMonth(); // Month is zero-based
         monthlyTotalIncomes[incomeMonth] += income.value; // Assuming there's an 'amount' property in your income model
       });
-
+  
       // Create the desired data structure
       const data = {
-        labels: Array.from({ length: 12 }, (_, index) =>
-          (index + 1).toString()
-        ),
+        labels: Array.from({ length: 12 }, (_, index) => (index + 1).toString()),
         datasets: [
           {
             data: monthlyTotalIncomes,
           },
         ],
       };
-
+  
       res.status(200).json(data);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to get incomes" });
     }
   },
+  
+  
 
   updateIncome: async (req, res) => {
     try {
-      const { userId, incomeId } = req.params;
-      const { categoriesIncome, date, value, note } = req.body;
+      const { userId, incomeId, categoriesIncome, date, value, note } =
+        req.body;
       validIdMongo(userId);
       validIdMongo(incomeId);
       const user = await FinanceUserModel.findById(userId);
@@ -254,7 +256,7 @@ module.exports = {
       );
 
       if (incomeIndex === -1) {
-        return res.status(404).json({ error: "Income not found" });
+        return res.status(404).json({ error: "income not found" });
       }
 
       // Update fields in the FinanceUserModel

@@ -8,6 +8,9 @@ const financeSchema = new mongoose.Schema(
     premium: { type: Boolean, default: false },
     expenses: [{ type: mongoose.Schema.Types.ObjectId, ref: "expensesModel" }],
     incomes: [{ type: mongoose.Schema.Types.ObjectId, ref: "incomeModel" }],
+    moneypayment: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "moneyPaymentModel" },
+    ],
   },
   {
     timestamps: true,

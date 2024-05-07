@@ -6,9 +6,6 @@ const financeRoute = require("./routes/financeRoute");
 const expensesRoute = require("./routes/expensesRoute");
 const incomeRoute = require("./routes/incomeRoute");
 const moneyPaymentRoute = require("./routes/moneyPaymentRoute");
-const memberRoute = require("./routes/memberRoute");
-const payment_peopleRoute = require("./routes/payment_peopleRoute");
-
 const fs = require("fs");
 //---------------------------------------------------------- server ----------------------------------------------------------
 // ip = "172.26.6.111";

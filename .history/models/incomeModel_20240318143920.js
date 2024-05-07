@@ -5,10 +5,10 @@ const incomeSchema = new mongoose.Schema(
     categoriesIncome: { type: String },
     date: { type: Date },
     value: { type: Number, default: 0 },
-    note: { type: String, default: "_" },
+    note:  { type: String, default: "_" },
   },
   {
-    timestamps: { createdAt: "createdAt", updatedAt: false },
+    timestamps: { createdAt: 'createdAt', updatedAt: false },
   }
 );
 

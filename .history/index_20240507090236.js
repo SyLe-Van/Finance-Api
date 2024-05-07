@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 4000;
 const financeRoute = require("./routes/financeRoute");
 const expensesRoute = require("./routes/expensesRoute");
 const incomeRoute = require("./routes/incomeRoute");
+const moneyPaymentRoute = require("./routes/moneyPaymentRoute");
 const fs = require("fs");
 //---------------------------------------------------------- server ----------------------------------------------------------
 // ip = "172.26.6.111";
@@ -27,3 +28,4 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use("/api/", financeRoute);
 app.use("/api/", expensesRoute);
 app.use("/api/", incomeRoute);
+app.use("/api/", moneyPaymentRoute);

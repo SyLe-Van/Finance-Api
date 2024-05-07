@@ -5,10 +5,6 @@ const PORT = process.env.PORT || 4000;
 const financeRoute = require("./routes/financeRoute");
 const expensesRoute = require("./routes/expensesRoute");
 const incomeRoute = require("./routes/incomeRoute");
-const moneyPaymentRoute = require("./routes/moneyPaymentRoute");
-const memberRoute = require("./routes/memberRoute");
-const payment_peopleRoute = require("./routes/payment_peopleRoute");
-
 const fs = require("fs");
 //---------------------------------------------------------- server ----------------------------------------------------------
 // ip = "172.26.6.111";
@@ -18,8 +14,6 @@ app.listen(PORT, () =>
 
 //---------------------------------------------------------- MongoDB connect -----------------------------------------------------
 const mongoose = require("mongoose");
-const memberModel = require("./models/memberModel");
-const payment_peopleModel = require("./models/payment_peopleModel");
 mongoose.Promise = global.Promise;
 mongoose
   .connect(process.env.MONGODB_URL, {
@@ -34,5 +28,3 @@ app.use("/api/", financeRoute);
 app.use("/api/", expensesRoute);
 app.use("/api/", incomeRoute);
 app.use("/api/", moneyPaymentRoute);
-app.use("/api/", memberRoute);
-app.use("/api/", payment_peopleRoute);

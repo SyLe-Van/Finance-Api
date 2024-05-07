@@ -67,7 +67,7 @@ module.exports = {
   updatePremium: async (req, res) => {
     try {
       const { id } = req.params;
-      validIdMongo(id);
+      validIdMogo(id);
       const user = await financeModel.findById(id);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
@@ -89,7 +89,7 @@ module.exports = {
   getUser: async (req, res) => {
     try {
       const { id } = req.params;
-      validIdMongo(id);
+      validIdMogo(id);
         const user = await financeModel
           .findById(id)
           .populate("expenses")

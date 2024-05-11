@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 const moneyPaymentController = require("../controllers/moneyPaymentControllers");
 
-router.post("/addGroup", moneyPaymentController.addGroup);
+router.post("/addGroup/:userId", moneyPaymentController.addGroup);
 router.put("/updateMember", moneyPaymentController.updateMember);
 router.put("/addMember", moneyPaymentController.addMember);
 router.delete("/deleteMember", moneyPaymentController.deleteMember);

@@ -10,17 +10,20 @@ module.exports = {
       const { userId, name_group, member } = req.body;
 
       validIdMongo(userId);
-      const newGroup = await moneyPaymentModel.create({
-        name_group,
-        member,
-      });
 
       const user = await FinanceUserModel.findById(userId);
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
+
+      const newGroup = await moneyPaymentModel.create({
+        name_group,
+        member,
+      });
+
       console.log(newGroup);
+
       user.moneypayment.push(newGroup);
       await user.save();
       res.status(201).json(newGroup);

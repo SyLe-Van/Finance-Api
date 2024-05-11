@@ -16,6 +16,8 @@ app.listen(PORT, () =>
 
 //---------------------------------------------------------- MongoDB connect -----------------------------------------------------
 const mongoose = require("mongoose");
+const memberModel = require("./models/memberModel");
+const payment_peopleModel = require("./models/payment_peopleModel");
 mongoose.Promise = global.Promise;
 mongoose
   .connect(process.env.MONGODB_URL, {

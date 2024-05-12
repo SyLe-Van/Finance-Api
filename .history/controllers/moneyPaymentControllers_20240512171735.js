@@ -12,8 +12,7 @@ module.exports = {
       validIdMongo(userId);
       const newGroup = await moneyPaymentModel.create({
         name_group,
-        member,
-        // member: members.map((member) => member.member_name),
+        member: member.map((member) => member.member_name),
       });
 
       const user = await FinanceUserModel.findById(userId);

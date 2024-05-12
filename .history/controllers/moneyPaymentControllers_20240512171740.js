@@ -7,13 +7,12 @@ dotenv.config();
 module.exports = {
   addGroup: async (req, res) => {
     try {
-      const { userId, name_group, member } = req.body;
+      const { userId, name_group, members } = req.body;
 
       validIdMongo(userId);
       const newGroup = await moneyPaymentModel.create({
         name_group,
-        member,
-        // member: members.map((member) => member.member_name),
+        member: members.map((member) => member.member_name),
       });
 
       const user = await FinanceUserModel.findById(userId);

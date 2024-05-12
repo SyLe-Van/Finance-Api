@@ -20,7 +20,7 @@ module.exports = {
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-
+      console.log(newGroup);
       user.moneypayment.push(newGroup);
       await user.save();
       res.status(201).json(newGroup);

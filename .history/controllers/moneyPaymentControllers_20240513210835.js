@@ -148,11 +148,11 @@ module.exports = {
   },
   addPayList: async (req, res) => {
     try {
-      const { groupId } = req.params;
+      const { groupId } = req.params; // Lấy groupId từ params
 
       validIdMongo(groupId);
 
-      const { memberId, member_name, value, note } = req.body;
+      const { memberId, member_name, value, note } = req.body; // Dữ liệu vẫn được truyền qua body
 
       const group = await moneyPaymentModel.findById(groupId);
 

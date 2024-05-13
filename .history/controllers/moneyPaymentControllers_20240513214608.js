@@ -152,7 +152,7 @@ module.exports = {
 
       validIdMongo(groupId);
 
-      const { payments } = req.body; // Thay đổi ở đây
+      const { memberId, member_name, value, note } = req.body;
 
       const group = await moneyPaymentModel.findById(groupId);
 
@@ -160,23 +160,21 @@ module.exports = {
         return res.status(404).json({ error: "Group not found" });
       }
 
-      // Lặp qua từng đối tượng và thêm vào danh sách thanh toán
-      payments.forEach(async (payment) => {
-        const { memberId, member_name, value, note } = payment;
-        const newPayment = {
-          member_id: memberId,
-          member_name,
-          value: value || 0,
-          note: note || "_",
-        };
-        group.pay_list.push(newPayment);
-      });
+      const newPayment = {
+        member_id: memberId,
+        member_name,
+        value: value || 0,
+        note: note || "_",
+      };
 
+      group.pay_list.push(newPayment);
       await group.save();
-      res.status(201).json({ message: "Payments added successfully" }); // Không trả về newPayment vì có nhiều thanh toán được thêm
+      res
+        .status(201)
+        .json({ message: "Payment added successfully", newPayment });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Failed to add payments" });
+      res.status(500).json({ error: "Failed to add payment" });
     }
   },
 

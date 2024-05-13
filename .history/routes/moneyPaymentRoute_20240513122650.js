@@ -12,7 +12,7 @@ router.delete("/deletePayList", moneyPaymentController.deletePayList);
 router.delete("/deleteGroup", moneyPaymentController.deleteGroup);
 router.get("/calculateGroup/:groupId", moneyPaymentController.calculateGroup);
 router.get(
-  "/getOneGroupID/:userId/:groupId",
+  "/getOneGroupID/:userID/:groupId",
   moneyPaymentController.getGroupInfo
 );
 module.exports = router;

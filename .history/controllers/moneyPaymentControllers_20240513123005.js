@@ -47,6 +47,10 @@ module.exports = {
         return res.status(404).json({ error: "Group not found" });
       }
 
+      const isUserInGroup = group.member.some((member) =>
+        user.moneypayment.includes(member._id.toString())
+      );
+
       res.status(200).json(group);
     } catch (error) {
       console.error(error);

@@ -152,7 +152,7 @@ module.exports = {
 
       validIdMongo(groupId);
 
-      const { payments } = req.body;
+      const { payments } = req.body; 
 
       const group = await moneyPaymentModel.findById(groupId);
 
@@ -160,6 +160,7 @@ module.exports = {
         return res.status(404).json({ error: "Group not found" });
       }
 
+      
       payments.forEach(async (payment) => {
         const { memberId, member_name, value, note } = payment;
         const newPayment = {
@@ -283,11 +284,6 @@ module.exports = {
       }
 
       const lstMoneyPayment = group;
-      let totalPay = lstMoneyPayment.pay_list.reduce(
-        (acc, paymentNote) => acc + paymentNote.value,
-        0
-      );
-      console.log("totalPayment", totalPay);
 
       function separateMoney(lstMoneyPayment) {
         let totalPayment = lstMoneyPayment.pay_list.reduce(
@@ -380,7 +376,6 @@ module.exports = {
       console.log("recommend", recommendations);
 
       let result = {
-        total_payment: totalPay,
         average: averageMoney,
         highers: higher,
         lowers: lower,

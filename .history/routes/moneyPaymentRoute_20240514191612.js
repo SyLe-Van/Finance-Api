@@ -10,7 +10,7 @@ router.put("/addPayList/:groupId", moneyPaymentController.addPayList);
 router.put("/updatePayList", moneyPaymentController.updatePayList);
 router.delete("/deletePayList", moneyPaymentController.deletePayList);
 router.delete("/deleteGroup", moneyPaymentController.deleteGroup);
-router.get("/getAllGroups/:userId", moneyPaymentController.getAllGroups);
+router.get("/getAllGroups", moneyPaymentController.getAllGroups);
 router.get("/calculateGroup/:groupId", moneyPaymentController.calculateGroup);
 router.get(
   "/getOneGroupID/:userId/:groupId",

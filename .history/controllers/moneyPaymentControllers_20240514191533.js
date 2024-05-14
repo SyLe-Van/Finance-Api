@@ -183,23 +183,20 @@ module.exports = {
       const { userId } = req.params;
 
       validIdMongo(userId);
-
       const user = await FinanceUserModel.findById(userId);
+
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-      const groups = await moneyPaymentModel.find({
-        _id: { $in: user.moneypayment },
-      });
-      const groupInfo = groups.map((group) => ({
-        _id: group._id,
-        name: group.name_group,
-      }));
 
-      res.status(200).json(groupInfo);
+      const groups = await moneyPaymentModel.find({ "member._id": userId });
+
+      const groupNames = groups.map((group) => group.name_group);
+
+      res.status(200).json(groupNames);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Failed to get groups" });
+      res.status(500).json({ error: "Failed to get user groups" });
     }
   },
 

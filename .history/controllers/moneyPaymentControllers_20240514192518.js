@@ -188,9 +188,13 @@ module.exports = {
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
+
+      // Lấy tất cả các group của user
       const groups = await moneyPaymentModel.find({
         _id: { $in: user.moneypayment },
       });
+
+      // Trích xuất ID và tên của các group
       const groupInfo = groups.map((group) => ({
         _id: group._id,
         name: group.name_group,

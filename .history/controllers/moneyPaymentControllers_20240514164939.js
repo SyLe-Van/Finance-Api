@@ -283,18 +283,11 @@ module.exports = {
       }
 
       const lstMoneyPayment = group;
-      let totalPay = formatNumber(
-        lstMoneyPayment.pay_list.reduce(
-          (acc, paymentNote) => acc + paymentNote.value,
-          0
-        )
+      let totalPay = lstMoneyPayment.pay_list.reduce(
+        (acc, paymentNote) => acc + paymentNote.value,
+        0
       );
-
       console.log("totalPayment", totalPay);
-
-      function formatNumber(number) {
-        return number.toLocaleString("en-US", { maximumFractionDigits: 0 });
-      }
 
       function separateMoney(lstMoneyPayment) {
         let totalPayment = lstMoneyPayment.pay_list.reduce(
@@ -332,6 +325,7 @@ module.exports = {
             });
           }
         }
+
         return [lstHigherAverage, lstLowerAverage];
       }
 
@@ -351,7 +345,7 @@ module.exports = {
                   lstPayStatus.push({
                     receive_people: receivePerson.member,
                     pay_people: payPerson.member,
-                    money_pay: formatNumber(payPerson.pay),
+                    money_pay: payPerson.pay,
                   });
                   payPerson.pay = 0;
                 } else if (
@@ -363,7 +357,7 @@ module.exports = {
                   lstPayStatus.push({
                     receive_people: receivePerson.member,
                     pay_people: payPerson.member,
-                    money_pay: formatNumber(payPerson.pay - moneyResidual),
+                    money_pay: payPerson.pay - moneyResidual,
                   });
                   payPerson.pay = moneyResidual;
                 }
@@ -387,7 +381,7 @@ module.exports = {
 
       let result = {
         total_payment: totalPay,
-        average: formatNumber(averageMoney),
+        average: averageMoney,
         highers: higher,
         lowers: lower,
         recommendations: recommendations,

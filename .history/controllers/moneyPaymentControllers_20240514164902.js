@@ -273,6 +273,127 @@ module.exports = {
     }
   },
 
+  // calculateGroup: async (req, res) => {
+  //   try {
+  //     const { groupId } = req.params;
+  //     validIdMongo(groupId);
+  //     const group = await moneyPaymentModel.findById(groupId);
+  //     if (!group) {
+  //       return res.status(404).json({ error: "group not found" });
+  //     }
+
+  //     const lstMoneyPayment = group;
+  //     let totalPay = lstMoneyPayment.pay_list.reduce(
+  //       (acc, paymentNote) => acc + paymentNote.value,
+  //       0
+  //     );
+  //     console.log("totalPayment", totalPay);
+
+  //     function separateMoney(lstMoneyPayment) {
+  //       let totalPayment = lstMoneyPayment.pay_list.reduce(
+  //         (acc, paymentNote) => acc + paymentNote.value,
+  //         0
+  //       );
+  //       return totalPayment / lstMoneyPayment.member.length;
+  //     }
+
+  //     function paymentHigherLower(lstMoneyPayment, averageMoney) {
+  //       let lstHigherAverage = [];
+  //       let lstLowerAverage = [];
+
+  //       for (let person of lstMoneyPayment.member) {
+  //         let totalPayment = 0;
+  //         for (let payment of lstMoneyPayment.pay_list) {
+  //           if (payment.member_name === person.member_name) {
+  //             totalPayment += payment.value;
+  //           }
+  //         }
+
+  //         if (totalPayment > averageMoney) {
+  //           lstHigherAverage.push({
+  //             member: person.member_name,
+  //             total_money: totalPayment,
+  //             money_receive: totalPayment - averageMoney,
+  //             receive: 0,
+  //           });
+  //         } else {
+  //           lstLowerAverage.push({
+  //             member: person.member_name,
+  //             total_money: totalPayment,
+  //             money_pay: averageMoney - totalPayment,
+  //             pay: averageMoney - totalPayment,
+  //           });
+  //         }
+  //       }
+
+  //       return [lstHigherAverage, lstLowerAverage];
+  //     }
+
+  //     function paymentRecommend(lstHigherAverage, lstLowerAverage) {
+  //       let lstPayStatus = [];
+
+  //       for (let receivePerson of lstHigherAverage) {
+  //         let receiveMoney = receivePerson.receive;
+
+  //         for (let payPerson of lstLowerAverage) {
+  //           if (payPerson.pay !== 0) {
+  //             if (receivePerson.receive < receivePerson.money_receive) {
+  //               if (
+  //                 receiveMoney + payPerson.pay <=
+  //                 receivePerson.money_receive
+  //               ) {
+  //                 lstPayStatus.push({
+  //                   receive_people: receivePerson.member,
+  //                   pay_people: payPerson.member,
+  //                   money_pay: payPerson.pay,
+  //                 });
+  //                 payPerson.pay = 0;
+  //               } else if (
+  //                 receiveMoney + payPerson.pay >
+  //                 receivePerson.money_receive
+  //               ) {
+  //                 let moneyResidual =
+  //                   receiveMoney + payPerson.pay - receivePerson.money_receive;
+  //                 lstPayStatus.push({
+  //                   receive_people: receivePerson.member,
+  //                   pay_people: payPerson.member,
+  //                   money_pay: payPerson.pay - moneyResidual,
+  //                 });
+  //                 payPerson.pay = moneyResidual;
+  //               }
+  //             }
+  //           }
+  //         }
+  //       }
+
+  //       return lstPayStatus;
+  //     }
+
+  //     // Usage func for calculate group
+  //     let averageMoney = separateMoney(lstMoneyPayment);
+  //     let [higher, lower] = paymentHigherLower(lstMoneyPayment, averageMoney);
+  //     let recommendations = paymentRecommend(higher, lower);
+
+  //     console.log("average", averageMoney);
+  //     console.log("higher", higher);
+  //     console.log("lower", lower);
+  //     console.log("recommend", recommendations);
+
+  //     let result = {
+  //       total_payment: totalPay,
+  //       average: averageMoney,
+  //       highers: higher,
+  //       lowers: lower,
+  //       recommendations: recommendations,
+  //     };
+
+  //     res.status(200).json(result);
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).json({ error: "Failed to calculate group" });
+  //   }
+  // },
+  // api mới
   calculateGroup: async (req, res) => {
     try {
       const { groupId } = req.params;
@@ -283,18 +404,11 @@ module.exports = {
       }
 
       const lstMoneyPayment = group;
-      let totalPay = formatNumber(
-        lstMoneyPayment.pay_list.reduce(
-          (acc, paymentNote) => acc + paymentNote.value,
-          0
-        )
+      let totalPay = lstMoneyPayment.pay_list.reduce(
+        (acc, paymentNote) => acc + paymentNote.value,
+        0
       );
-
       console.log("totalPayment", totalPay);
-
-      function formatNumber(number) {
-        return number.toLocaleString("en-US", { maximumFractionDigits: 0 });
-      }
 
       function separateMoney(lstMoneyPayment) {
         let totalPayment = lstMoneyPayment.pay_list.reduce(
@@ -302,6 +416,16 @@ module.exports = {
           0
         );
         return totalPayment / lstMoneyPayment.member.length;
+      }
+
+      function formatNumber(number) {
+        if (number >= 1000000) {
+          return (number / 1000000).toFixed(0) + ".000.000";
+        } else if (number >= 1000) {
+          return (number / 1000).toLocaleString("vi-VN");
+        } else {
+          return number.toLocaleString("vi-VN");
+        }
       }
 
       function paymentHigherLower(lstMoneyPayment, averageMoney) {
@@ -319,19 +443,20 @@ module.exports = {
           if (totalPayment > averageMoney) {
             lstHigherAverage.push({
               member: person.member_name,
-              total_money: totalPayment,
-              money_receive: totalPayment - averageMoney,
+              total_money: formatNumber(totalPayment),
+              money_receive: formatNumber(totalPayment - averageMoney),
               receive: 0,
             });
           } else {
             lstLowerAverage.push({
               member: person.member_name,
-              total_money: totalPayment,
-              money_pay: averageMoney - totalPayment,
+              total_money: formatNumber(totalPayment),
+              money_pay: formatNumber(averageMoney - totalPayment),
               pay: averageMoney - totalPayment,
             });
           }
         }
+
         return [lstHigherAverage, lstLowerAverage];
       }
 
@@ -339,31 +464,26 @@ module.exports = {
         let lstPayStatus = [];
 
         for (let receivePerson of lstHigherAverage) {
-          let receiveMoney = receivePerson.receive;
+          let receiveMoney = receivePerson.money_receive; // Sửa lại thành money_receive
 
           for (let payPerson of lstLowerAverage) {
             if (payPerson.pay !== 0) {
-              if (receivePerson.receive < receivePerson.money_receive) {
-                if (
-                  receiveMoney + payPerson.pay <=
-                  receivePerson.money_receive
-                ) {
+              if (receiveMoney < receivePerson.total_money) {
+                // Sửa lại điều kiện này
+                if (receiveMoney + payPerson.pay <= receivePerson.total_money) {
                   lstPayStatus.push({
                     receive_people: receivePerson.member,
                     pay_people: payPerson.member,
-                    money_pay: formatNumber(payPerson.pay),
+                    money_pay: payPerson.pay,
                   });
                   payPerson.pay = 0;
-                } else if (
-                  receiveMoney + payPerson.pay >
-                  receivePerson.money_receive
-                ) {
+                } else {
                   let moneyResidual =
-                    receiveMoney + payPerson.pay - receivePerson.money_receive;
+                    receiveMoney + payPerson.pay - receivePerson.total_money;
                   lstPayStatus.push({
                     receive_people: receivePerson.member,
                     pay_people: payPerson.member,
-                    money_pay: formatNumber(payPerson.pay - moneyResidual),
+                    money_pay: payPerson.pay - moneyResidual,
                   });
                   payPerson.pay = moneyResidual;
                 }
@@ -386,7 +506,7 @@ module.exports = {
       console.log("recommend", recommendations);
 
       let result = {
-        total_payment: totalPay,
+        total_payment: formatNumber(totalPay),
         average: formatNumber(averageMoney),
         highers: higher,
         lowers: lower,

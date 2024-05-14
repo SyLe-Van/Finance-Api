@@ -293,7 +293,7 @@ module.exports = {
       console.log("totalPayment", totalPay);
 
       function formatNumber(number) {
-        return number.toLocaleString("en-US", { maximumFractionDigits: 0 });
+        return number.toLocaleString("en-US", { maximumFractionDigits: 2 });
       }
 
       function separateMoney(lstMoneyPayment) {

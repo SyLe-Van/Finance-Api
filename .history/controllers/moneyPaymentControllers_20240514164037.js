@@ -283,18 +283,11 @@ module.exports = {
       }
 
       const lstMoneyPayment = group;
-      let totalPay = formatNumber(
-        lstMoneyPayment.pay_list.reduce(
-          (acc, paymentNote) => acc + paymentNote.value,
-          0
-        )
+      let totalPay = lstMoneyPayment.pay_list.reduce(
+        (acc, paymentNote) => acc + paymentNote.value,
+        0
       );
-
       console.log("totalPayment", totalPay);
-
-      function formatNumber(number) {
-        return number.toLocaleString("en-US", { maximumFractionDigits: 0 });
-      }
 
       function separateMoney(lstMoneyPayment) {
         let totalPayment = lstMoneyPayment.pay_list.reduce(
@@ -302,6 +295,16 @@ module.exports = {
           0
         );
         return totalPayment / lstMoneyPayment.member.length;
+      }
+
+      function formatNumber(number) {
+        if (number >= 1000000) {
+          return (number / 1000000).toFixed(0) + ".000.000";
+        } else if (number >= 1000) {
+          return (number / 1000).toLocaleString("vi-VN");
+        } else {
+          return number.toLocaleString("vi-VN");
+        }
       }
 
       function paymentHigherLower(lstMoneyPayment, averageMoney) {
@@ -319,19 +322,20 @@ module.exports = {
           if (totalPayment > averageMoney) {
             lstHigherAverage.push({
               member: person.member_name,
-              total_money: totalPayment,
-              money_receive: totalPayment - averageMoney,
+              total_money: formatNumber(totalPayment),
+              money_receive: formatNumber(totalPayment - averageMoney),
               receive: 0,
             });
           } else {
             lstLowerAverage.push({
               member: person.member_name,
-              total_money: totalPayment,
-              money_pay: averageMoney - totalPayment,
+              total_money: formatNumber(totalPayment),
+              money_pay: formatNumber(averageMoney - totalPayment),
               pay: averageMoney - totalPayment,
             });
           }
         }
+
         return [lstHigherAverage, lstLowerAverage];
       }
 
@@ -351,7 +355,7 @@ module.exports = {
                   lstPayStatus.push({
                     receive_people: receivePerson.member,
                     pay_people: payPerson.member,
-                    money_pay: formatNumber(payPerson.pay),
+                    money_pay: payPerson.pay,
                   });
                   payPerson.pay = 0;
                 } else if (
@@ -363,7 +367,7 @@ module.exports = {
                   lstPayStatus.push({
                     receive_people: receivePerson.member,
                     pay_people: payPerson.member,
-                    money_pay: formatNumber(payPerson.pay - moneyResidual),
+                    money_pay: payPerson.pay - moneyResidual,
                   });
                   payPerson.pay = moneyResidual;
                 }
@@ -386,7 +390,7 @@ module.exports = {
       console.log("recommend", recommendations);
 
       let result = {
-        total_payment: totalPay,
+        total_payment: formatNumber(totalPay),
         average: formatNumber(averageMoney),
         highers: higher,
         lowers: lower,

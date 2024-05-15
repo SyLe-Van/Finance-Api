@@ -203,9 +203,10 @@ module.exports = {
     }
   },
 
-  deletePayList: async (req, res) => {
+  updatePayList: async (req, res) => {
     try {
-      const { groupId, paylistId } = req.body;
+      const { groupId, paylistId, member_id, member_name, value, note } =
+        req.body;
 
       validIdMongo(groupId);
       validIdMongo(paylistId);
@@ -223,20 +224,21 @@ module.exports = {
       if (paylistIndex === -1) {
         return res.status(404).json({ error: "Member not found" });
       }
-
-      group.pay_list.splice(paylistIndex, 1);
+      group.pay_list[paylistIndex].member_id = member_id;
+      group.pay_list[paylistIndex].member_name = member_name;
+      group.pay_list[paylistIndex].value = value;
+      group.pay_list[paylistIndex].note = note;
 
       await group.save();
-      res.status(200).json({ message: "Member deleted successfully" });
+      res.status(200).json({ message: "Member updated successfull!" });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Failed to delete member" });
+      res.status(500).json({ error: "Failed to update member" });
     }
   },
-
   updatePayList: async (req, res) => {
     try {
-      const { groupId } = req.params;
+      const { groupId } = req.params; // Extract groupId from params
       const { paylistId, member_id, member_name, value, note } = req.body;
 
       validIdMongo(groupId);

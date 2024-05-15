@@ -203,7 +203,7 @@ module.exports = {
     }
   },
 
-  deletePayList: async (req, res) => {
+  deletePaylist: async (req, res) => {
     try {
       const { groupId, paylistId } = req.body;
 
@@ -236,7 +236,7 @@ module.exports = {
 
   updatePayList: async (req, res) => {
     try {
-      const { groupId } = req.params;
+      const { groupId } = req.params; // Extract groupId from params
       const { paylistId, member_id, member_name, value, note } = req.body;
 
       validIdMongo(groupId);

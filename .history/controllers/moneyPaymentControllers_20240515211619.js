@@ -236,11 +236,10 @@ module.exports = {
 
   updatePayList: async (req, res) => {
     try {
-      const { groupId } = req.params;
-      const { paylistId, member_name, value, note } = req.body;
+      const { groupId } = req.params; // Extract groupId from params
+      const updates = req.body; // Array of updates to pay list items
 
       validIdMongo(groupId);
-      validIdMongo(paylistId);
 
       const group = await moneyPaymentModel.findById(groupId);
 
@@ -248,26 +247,41 @@ module.exports = {
         return res.status(404).json({ error: "Group not found" });
       }
 
-      const paylistIndex = group.pay_list.findIndex(
-        (pay_list) => pay_list._id.toString() === paylistId
-      );
+      // Log updates received for debugging
+      console.log("Received updates:", updates);
 
-      if (paylistIndex === -1) {
-        return res.status(404).json({ error: "Member not found" });
-      }
+      // Loop through each update and apply changes
+      updates.forEach(async (update) => {
+        const { paylistId, member_id, member_name, value, note } = update;
+        const paylistIndex = group.pay_list.findIndex(
+          (pay_list) => pay_list._id.toString() === paylistId
+        );
 
-      group.pay_list[paylistIndex].member_name = member_name;
-      group.pay_list[paylistIndex].value = value;
-      group.pay_list[paylistIndex].note = note;
+        if (paylistIndex === -1) {
+          console.error(`Paylist item not found for paylistId: ${paylistId}`);
+          return; // Skip this update and move to the next one
+        }
 
+        // Update paylist item with new values
+        group.pay_list[paylistIndex].member_id = member_id;
+        group.pay_list[paylistIndex].member_name = member_name;
+        group.pay_list[paylistIndex].value = value;
+        group.pay_list[paylistIndex].note = note;
+      });
+
+      // Save the updated group
       await group.save();
-      res.status(200).json({ message: "Member updated successfulls" });
+
+      // Log the updated group for debugging
+      console.log("Updated group:", group);
+
+      // Respond with success message
+      res.status(200).json({ message: "Pay items updated successfully!" });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Failed to update member" });
+      res.status(500).json({ error: "Failed to update pay items" });
     }
   },
-
   deleteGroup: async (req, res) => {
     try {
       const { userId, groupId } = req.params;

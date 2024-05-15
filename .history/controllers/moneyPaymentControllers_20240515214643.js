@@ -237,7 +237,7 @@ module.exports = {
   updatePayList: async (req, res) => {
     try {
       const { groupId } = req.params;
-      const { paylistId, member_name, value, note } = req.body;
+      const { paylistId, member_id, member_name, value, note } = req.body;
 
       validIdMongo(groupId);
       validIdMongo(paylistId);
@@ -255,7 +255,7 @@ module.exports = {
       if (paylistIndex === -1) {
         return res.status(404).json({ error: "Member not found" });
       }
-
+      group.pay_list[paylistIndex].member_id = member_id;
       group.pay_list[paylistIndex].member_name = member_name;
       group.pay_list[paylistIndex].value = value;
       group.pay_list[paylistIndex].note = note;

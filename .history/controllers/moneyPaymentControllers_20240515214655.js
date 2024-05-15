@@ -255,7 +255,7 @@ module.exports = {
       if (paylistIndex === -1) {
         return res.status(404).json({ error: "Member not found" });
       }
-
+      group.pay_list[paylistIndex].member_id = member_id;
       group.pay_list[paylistIndex].member_name = member_name;
       group.pay_list[paylistIndex].value = value;
       group.pay_list[paylistIndex].note = note;

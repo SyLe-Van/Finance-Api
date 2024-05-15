@@ -236,11 +236,10 @@ module.exports = {
 
   updatePayList: async (req, res) => {
     try {
-      const { groupId } = req.params;
-      const { paylistId, member_name, value, note } = req.body;
-
+      const { groupId } = res.params;
       validIdMongo(groupId);
-      validIdMongo(paylistId);
+
+      const { paylistUpdates } = req.body;
 
       const group = await moneyPaymentModel.findById(groupId);
 
@@ -248,23 +247,31 @@ module.exports = {
         return res.status(404).json({ error: "Group not found" });
       }
 
-      const paylistIndex = group.pay_list.findIndex(
-        (pay_list) => pay_list._id.toString() === paylistId
-      );
+      paylistUpdates.forEach(async (paylistUpdate) => {
+        const { paylistId, member_id, member_name, value, note } =
+          paylistUpdate;
 
-      if (paylistIndex === -1) {
-        return res.status(404).json({ error: "Member not found" });
-      }
+        validIdMongo(paylistId);
 
-      group.pay_list[paylistIndex].member_name = member_name;
-      group.pay_list[paylistIndex].value = value;
-      group.pay_list[paylistIndex].note = note;
+        const paylistIndex = group.pay_list.findIndex(
+          (paylist) => paylist._id.toString() === paylistId
+        );
+
+        if (paylistIndex === -1) {
+          return res.status(404).json({ error: "Member not found" });
+        }
+
+        group.pay_list[paylistIndex].member_id = member_id;
+        group.pay_list[paylistIndex].member_name = member_name;
+        group.pay_list[paylistIndex].value = value;
+        group.pay_list[paylistIndex].note = note;
+      });
 
       await group.save();
-      res.status(200).json({ message: "Member updated successfulls" });
+      res.status(200).json({ message: "Members updated successfully" });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Failed to update member" });
+      res.status(500).json({ error: "Failed to update members" });
     }
   },
 

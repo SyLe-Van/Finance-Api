@@ -8,10 +8,7 @@ router.put("/addMember", moneyPaymentController.addMember);
 router.delete("/deleteMember", moneyPaymentController.deleteMember);
 router.put("/addPayList/:groupId", moneyPaymentController.addPayList);
 router.put("/updatePayList/:groupId", moneyPaymentController.updatePayList);
-router.delete(
-  "/deletePayList/:groupId/:paylistId",
-  moneyPaymentController.deletePayList
-);
+router.delete("/deletePayList/:groupId", moneyPaymentController.deletePayList);
 router.delete(
   "/deleteGroup/:userId/:groupId",
   moneyPaymentController.deleteGroup

@@ -205,7 +205,8 @@ module.exports = {
 
   deletePayList: async (req, res) => {
     try {
-      const { groupId, paylistId } = req.params; // Lấy groupId và paylistId từ params
+      const { groupId } = res.params;
+      const { paylistId } = req.body;
 
       validIdMongo(groupId);
       validIdMongo(paylistId);

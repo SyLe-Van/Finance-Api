@@ -172,11 +172,12 @@ module.exports = {
       });
 
       await group.save();
-      console.log(group.pay_list);
-      res.status(201).json({
-        message: "Payments added successfully",
-        payments: group.pay_list,
-      });
+      res
+        .status(201)
+        .json({
+          message: "Payments added successfully",
+          payments: group.pay_list,
+        });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to add payments" });

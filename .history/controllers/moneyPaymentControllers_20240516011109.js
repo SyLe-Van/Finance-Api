@@ -172,11 +172,7 @@ module.exports = {
       });
 
       await group.save();
-      console.log(group.pay_list);
-      res.status(201).json({
-        message: "Payments added successfully",
-        payments: group.pay_list,
-      });
+      res.status(201).json({ message: "Payments added successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to add payments" });
@@ -209,7 +205,7 @@ module.exports = {
 
   deletePayList: async (req, res) => {
     try {
-      const { groupId, paylistId } = req.params;
+      const { groupId, paylistId } = req.params; 
       validIdMongo(groupId);
       validIdMongo(paylistId);
 

@@ -180,7 +180,7 @@ module.exports = {
       }
 
       console.log(groupNew.pay_list);
-      const lengthst = groupNew.pay_list.length;
+      const lengthst = groupNew.pay_list.length();
       res.status(201).json({
         message: "Payments added successfully",
         payments: groupNew.pay_list[lengthst - 1],

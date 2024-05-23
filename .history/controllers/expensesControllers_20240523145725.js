@@ -1,4 +1,5 @@
 const ExpensesModel = require("../models/expensesModel");
+const IncomeModel = require("../models/incomeModel");
 const financeModel = require("../models/financeModel");
 const dotenv = require("dotenv");
 const validIdMongo = require("../utils/validMongoDB");
@@ -61,7 +62,7 @@ module.exports = {
     }
   },
 
-  getAllExpense: async (req, res) => {
+  getOneExpense: async (req, res) => {
     try {
       const { userId, expensesId } = req.params;
       validIdMongo(userId);
@@ -94,7 +95,7 @@ module.exports = {
     }
   },
 
-  getExpenses: async (req, res) => {
+  getAllExpense: async (req, res) => {
     try {
       const { userId } = req.params;
       validIdMongo(userId);
@@ -112,6 +113,40 @@ module.exports = {
       }));
 
       console.log(formattedExpenses);
+      res.status(200).json(formattedExpenses);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Failed to get expenses" });
+    }
+  },
+
+  checkExpensesLowIcome: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      validIdMongo(userId);
+
+      const user = await financeModel
+        .findById(userId)
+        .populate("expenses")
+        .populate("incomes");
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      const expenses = user.expenses.filter((expenses) => expenses !== null);
+      const incomes = user.incomes.filter((income) => income !== null);
+
+      // Format the date in each expense
+      const formattedExpenses = expenses.map((expense) => ({
+        ...expense.toObject(),
+        date: expense.date.toISOString().split("T")[0],
+      }));
+      const formattedIncomes = incomes.map((income) => ({
+        ...income.toObject(),
+        date: income.date.toISOString().split("T")[0],
+      }));
+      console.log(formattedExpenses);
+      console.log(formattedIncomes);
       res.status(200).json(formattedExpenses);
     } catch (error) {
       console.error(error);
@@ -241,33 +276,38 @@ module.exports = {
 
   updateExpenses: async (req, res) => {
     try {
-      const { userId, expensesId, categoriesExpenses, date, value, note } =
-        req.body;
+      const { userId, expensesId } = req.params;
+      const { categoriesExpenses, date, value, note } = req.body;
+
       validIdMongo(userId);
       validIdMongo(expensesId);
+
       const user = await financeModel.findById(userId);
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
+
       const expensesIndex = user.expenses.findIndex(
         (expenses) => expenses._id.toString() === expensesId
       );
       if (expensesIndex === -1) {
-        return res.status(404).json({ error: "expenses not found" });
+        return res.status(404).json({ error: "Expenses not found" });
       }
-      console.log(user.expenses[expensesIndex]);
+
       // Cập nhật thông tin chi phí trong mảng expenses của người dùng
       user.expenses[expensesIndex].categoriesExpenses = categoriesExpenses;
       user.expenses[expensesIndex].date = date;
       user.expenses[expensesIndex].value = value;
       user.expenses[expensesIndex].note = note;
       await user.save();
+
       // Cập nhật thông tin chi phí trong cơ sở dữ liệu
       const updatedExpenses = await ExpensesModel.findByIdAndUpdate(
         expensesId,
         { categoriesExpenses, date, value, note },
         { new: true }
       );
+
       res.status(200).json(updatedExpenses);
     } catch (error) {
       console.error(error);

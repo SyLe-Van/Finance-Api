@@ -1,4 +1,5 @@
 const ExpensesModel = require("../models/expensesModel");
+const IncomeModel = require("../models/incomeModel");
 const financeModel = require("../models/financeModel");
 const dotenv = require("dotenv");
 const validIdMongo = require("../utils/validMongoDB");
@@ -112,6 +113,41 @@ module.exports = {
       }));
 
       console.log(formattedExpenses);
+      res.status(200).json(formattedExpenses);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Failed to get expenses" });
+    }
+  },
+
+  checkExpensesLowIcome: async (req, res) => {
+    try {
+      const { userId } = req.params;
+      validIdMongo(userId);
+
+      const user = await financeModel
+        .findById(userId)
+        .populate("expenses")
+        .populate("incomes");
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      const expenses = user.expenses.filter((expenses) => expenses !== null);
+      const incomes = user.incomes.filter((income) => income !== null);
+
+      // Format the date in each expense
+      const formattedExpenses = expenses.map((expense) => ({
+        ...expense.toObject(),
+        date: expense.date.toISOString().split("T")[0],
+      }));
+      const formattedIncomes = incomes.map((income) => ({
+        ...income.toObject(),
+        date: income.date.toISOString().split("T")[0],
+      }));
+
+      const totalIncome = formattedIncomes.map((income) => console.log(income));
+
       res.status(200).json(formattedExpenses);
     } catch (error) {
       console.error(error);

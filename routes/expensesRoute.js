@@ -10,6 +10,11 @@ router.delete(
 router.get("/getExpense/:userId/:expensesId", expensesController.getOneExpense);
 router.get("/getExpenses/:userId", expensesController.getAllExpense);
 router.get(
+  "/checkExpensesLowIcome/:userId/:newValue",
+  expensesController.checkExpensesLowIcome
+);
+
+router.get(
   "/getExpensesByCurrentMonth/:userId",
   expensesController.getExpensesByCurrentMonth
 );

@@ -122,7 +122,7 @@ module.exports = {
 
   checkExpensesLowIcome: async (req, res) => {
     try {
-      const { userId, newValue } = req.params;
+      const { userId } = req.params;
       validIdMongo(userId);
 
       const user = await financeModel
@@ -150,17 +150,12 @@ module.exports = {
         (total, income) => total + income.value,
         0
       );
-      const totalExpenses = formattedExpenses.reduce(
+      const totalExpenses = formattedIncomes.reduce(
         (total, expense) => total + expense.value,
         0
       );
-      const result = {
-        totalIncome: totalIncome,
-        totalExpenses: totalExpenses + Number(newValue),
-        check: totalIncome >= totalExpenses + Number(newValue),
-      };
       console.log(totalIncome, totalExpenses);
-      res.status(200).json(result);
+      res.status(200).json(formattedExpenses);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to get expenses" });

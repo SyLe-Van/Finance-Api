@@ -395,11 +395,13 @@ module.exports = {
         let lstPayStatus = [];
 
         for (let receivePerson of lstHigherAverage) {
+          let receiveMoney = receivePerson.receive;
+
           for (let payPerson of lstLowerAverage) {
             if (payPerson.pay !== 0) {
               if (receivePerson.receive < receivePerson.money_receive) {
                 if (
-                  receivePerson.receive + payPerson.pay <=
+                  receiveMoney + payPerson.pay <=
                   receivePerson.money_receive
                 ) {
                   receivePerson.receive = receivePerson.receive + payPerson.pay;
@@ -410,13 +412,11 @@ module.exports = {
                   });
                   payPerson.pay = 0;
                 } else if (
-                  receivePerson.receive + payPerson.pay >
+                  receiveMoney + payPerson.pay >
                   receivePerson.money_receive
                 ) {
                   let moneyResidual =
-                    receivePerson.receive +
-                    payPerson.pay -
-                    receivePerson.money_receive;
+                    receiveMoney + payPerson.pay - receivePerson.money_receive;
                   receivePerson.receive =
                     receivePerson.receive + (payPerson.pay - moneyResidual);
                   lstPayStatus.push({

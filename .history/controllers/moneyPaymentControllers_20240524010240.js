@@ -395,6 +395,8 @@ module.exports = {
         let lstPayStatus = [];
 
         for (let receivePerson of lstHigherAverage) {
+          let receiveMoney = receivePerson.receive;
+
           for (let payPerson of lstLowerAverage) {
             if (payPerson.pay !== 0) {
               if (receivePerson.receive < receivePerson.money_receive) {

@@ -55,8 +55,7 @@ module.exports = {
       }
 
       for (let i = 0; i < group.pay_list.length; i++) {
-        data = formatNumber(group.pay_list[i].value);
-        group.pay_list[i].value = data;
+        group.pay_list[i].value = formatNumber(group.pay_list[i].value);
         console.log(group.pay_list[i].value);
         console.log(formatNumber(group.pay_list[i].value));
       }
@@ -180,7 +179,7 @@ module.exports = {
           member_id: memberId,
           member_name,
           value: value || 0,
-          note: note || 0,
+          note: note || "_",
         };
         group.pay_list.push(newPayment);
       });

@@ -45,9 +45,7 @@ module.exports = {
       const group = await moneyPaymentModel.findById(groupId);
       console.log(group);
       function formatNumber(number) {
-        return number.toLocaleString("en-US", {
-          maximumFractionDigits: 3,
-        });
+        return number.toLocaleString("en-US", { maximumFractionDigits: 0 });
       }
 
       if (!group) {
@@ -55,10 +53,8 @@ module.exports = {
       }
 
       for (let i = 0; i < group.pay_list.length; i++) {
-        data = formatNumber(group.pay_list[i].value);
-        group.pay_list[i].value = data;
+        group.pay_list[i].value = formatNumber(group.pay_list[i].value);
         console.log(group.pay_list[i].value);
-        console.log(formatNumber(group.pay_list[i].value));
       }
 
       res.status(200).json(group);
@@ -180,7 +176,7 @@ module.exports = {
           member_id: memberId,
           member_name,
           value: value || 0,
-          note: note || 0,
+          note: note || "_",
         };
         group.pay_list.push(newPayment);
       });
